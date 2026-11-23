@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lưu Trữ Comm — Tui & Bạn Tui</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #faf6f0;
+      --bg-dot: rgba(184, 151, 90, 0.22);
+      --surface: #fffdf9;
+      --surface-soft: #f5efe6;
+      --text: #362e28;
+      --text-muted: #7a6d62;
+      --gold: #c69c53;
+      --gold-dark: #a67c33;
+      --gold-soft: rgba(198, 156, 83, 0.16);
+      --border: rgba(198, 156, 83, 0.34);
+      --shadow: 0 10px 30px rgba(84, 62, 34, 0.08);
+      --shadow-hover: 0 14px 36px rgba(166, 124, 51, 0.16);
+      --danger: #c85a53;
+      --success: #5a9367;
+      --warning: #c88d32;
+      --lace-color: #faf6f0;
+      --font-mono: 'Courier Prime', monospace;
+      --font-body: 'Quicksand', sans-serif;
+      --radius: 18px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #171513;
+      --bg-dot: rgba(212, 175, 106, 0.14);
+      --surface: #221e1b;
+      --surface-soft: #2b2622;
+      --text: #f3ece2;
+      --text-muted: #b0a395;
+      --gold: #d9b26a;
+      --gold-dark: #f0cf8c;
+      --gold-soft: rgba(217, 178, 106, 0.16);
+      --border: rgba(217, 178, 106, 0.28);
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.42);
+      --shadow-hover: 0 16px 38px rgba(217, 178, 106, 0.16);
+      --danger: #e0766e;
+      --success: #79b887;
+      --warning: #e0a84c;
+      --lace-color: #171513;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--text);
+      background-color: var(--bg);
+      background-image: radial-gradient(var(--bg-dot) 1.25px, transparent 1.25px);
+      background-size: 20px 20px;
+      line-height: 1.6;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold);
+    }
+
+    /* Floating Minimal Control Bar */
+    .floating-bar {
+      position: fixed;
+      top: max(14px, env(safe-area-inset-top));
+      right: 14px;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .icon-btn {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .icon-btn:hover {
+      background: var(--gold-soft);
+      border-color: var(--border);
+      color: var(--gold-dark);
+    }
+
+    .icon-btn.primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #fffdf9;
+      border-color: transparent;
+    }
+
+    .icon-btn.primary:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      color: #fffdf9;
+    }
+
+    /* Section 1: Hero Banner */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 76vh;
+      min-height: 420px;
+      max-height: 720px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.02);
+      transition: transform 0.6s ease;
+    }
+
+    .hero-fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.14) 0%,
+        rgba(0, 0, 0, 0.06) 45%,
+        color-mix(in srgb, var(--bg) 55%, transparent) 82%,
+        var(--bg) 100%
+      );
+    }
+
+    .scroll-cue {
+      position: relative;
+      z-index: 3;
+      margin-bottom: 42px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      animation: floatCue 2.2s ease-in-out infinite;
+    }
+
+    @keyframes floatCue {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* Lace Trim at bottom of Hero */
+    .lace-trim {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 22px;
+      z-index: 4;
+      background-image: radial-gradient(circle at 14px 22px, var(--lace-color) 13px, transparent 13.8px);
+      background-size: 28px 22px;
+      background-repeat: repeat-x;
+      pointer-events: none;
+    }
+
+    .lace-line {
+      position: relative;
+      width: 100%;
+      height: 1px;
+      border-top: 1.5px dashed var(--border);
+      margin-top: -2px;
+    }
+
+    /* Main Container */
+    .container {
+      width: 100%;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 18px 80px;
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Section 2: Title Reveal */
+    .title-section {
+      text-align: center;
+      padding: 64px 10px 36px;
+    }
+
+    .flourish {
+      font-family: var(--font-mono);
+      color: var(--gold);
+      font-size: 14px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .site-title {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .site-subtitle {
+      margin: 12px auto 0;
+      max-width: 560px;
+      font-size: 15.5px;
+      color: var(--text-muted);
+    }
+
+    .gold-divider {
+      width: 120px;
+      height: 2px;
+      margin: 24px auto 0;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 999px;
+    }
+
+    /* Section 3: Cozy Intro Card */
+    .intro-card {
+      position: relative;
+      max-width: 780px;
+      margin: 14px auto 54px;
+      padding: 28px 26px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .intro-card::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: calc(var(--radius) - 5px);
+      border: 1px dashed var(--border);
+      pointer-events: none;
+    }
+
+    .intro-edit-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 5px 11px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .intro-edit-btn:hover {
+      color: var(--gold-dark);
+      border-color: var(--gold);
+    }
+
+    .intro-text {
+      margin: 8px auto 22px;
+      max-width: 620px;
+      font-size: 15.5px;
+      color: var(--text);
+      white-space: pre-line;
+    }
+
+    .friends-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .friend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 16px 7px 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold-soft), var(--surface-soft));
+      border: 1.5px solid var(--gold);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .friend-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(198, 156, 83, 0.22);
+    }
+
+    .friend-pill img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--gold);
+      background: var(--surface);
+    }
+
+    /* Section 4: Library Header & Controls */
+    .library-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .library-heading {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sync-badge {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .sync-badge.cloud {
+      color: var(--success);
+      border-color: color-mix(in srgb, var(--success) 45%, transparent);
+    }
+
+    .stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .stat-chip {
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .controls-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .pill-btn {
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #fffdf9;
+      border-color: transparent;
+      font-weight: 700;
+    }
+
+    .search-sort {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1;
+      justify-content: flex-end;
+      min-width: 240px;
+    }
+
+    .input-field, .select-field, .textarea-field {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-field:focus, .select-field:focus, .textarea-field:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-soft);
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 170px;
+      max-width: 280px;
+    }
+
+    /* Gallery Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px;
+    }
+
+    .comm-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .comm-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--gold);
+    }
+
+    .card-thumb-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: var(--surface-soft);
+      overflow: hidden;
+    }
+
+    .card-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .comm-card:hover .card-thumb {
+      transform: scale(1.04);
+    }
+
+    .card-badges {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .badge-owner {
+      background: rgba(28, 24, 20, 0.72);
+      color: #f7e3b5;
+      border: 1px solid rgba(217, 178, 106, 0.55);
+    }
+
+    .badge-status {
+      background: rgba(255, 253, 249, 0.9);
+      color: #362e28;
+      border: 1px solid rgba(198, 156, 83, 0.4);
+    }
+    .badge-status.done { color: var(--success); }
+    .badge-status.wip { color: var(--warning); }
+
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .card-title {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 16.5px;
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .card-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card-notes {
+      margin: 2px 0 0;
+      font-size: 13.5px;
+      color: var(--text);
+      opacity: 0.9;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: var(--gold-soft);
+      color: var(--gold-dark);
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 6px;
+      padding: 12px 14px;
+      border-top: 1px dashed var(--border);
+      background: var(--surface-soft);
+    }
+
+    .action-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold-dark);
+    }
+
+    .action-btn.open-link {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #fffdf9;
+      border-color: transparent;
+    }
+
+    .action-btn.open-link:hover {
+      filter: brightness(1.06);
+      color: #fffdf9;
+    }
+
+    .action-btn.delete:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 54px 20px;
+      border-radius: var(--radius);
+      border: 1.5px dashed var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 30px 18px 44px;
+      border-top: 1px dashed var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: color-mix(in srgb, var(--surface) 55%, transparent);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      background: rgba(15, 12, 10, 0.56);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1.5px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      animation: modalIn 0.22s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 18px;
+    }
+
+    .close-btn {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      color: var(--text);
+      padding: 9px 16px;
+      border-radius: 12px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #fffdf9;
+      border-color: transparent;
+    }
+
+    .btn.danger {
+      background: var(--danger);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .code-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 150px;
+      overflow-y: auto;
+      color: var(--text);
+    }
+
+    /* Toast */
+    .toast-wrap {
+      position: fixed;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      animation: toastIn 0.25s ease;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .floating-bar {
+        left: 10px;
+        right: 10px;
+        justify-content: space-between;
+      }
+      .icon-btn span.label {
+        display: none;
+      }
+      .icon-btn.primary span.label {
+        display: inline;
+      }
+      .hero {
+        height: 62vh;
+        min-height: 340px;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .search-sort {
+        justify-content: stretch;
+      }
+      .search-input {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating Control Bar -->
+  <nav class="floating-bar" aria-label="Điều khiển nhanh">
+    <button class="icon-btn primary" id="btnOpenAdd">+ <span class="label">Thêm Comm</span></button>
+    <button class="icon-btn" id="btnOpenSettings" title="Chỉnh sửa banner & giới thiệu">✿ <span class="label">Trang</span></button>
+    <button class="icon-btn" id="btnOpenSync" title="Sao lưu & Đồng bộ Supabase">☁ <span class="label">Sync</span></button>
+    <button class="icon-btn" id="btnTheme" title="Đổi sáng / tối">☾</button>
+  </nav>
+
+  <!-- Section 1: Hero Banner -->
+  <header class="hero">
+    <img id="heroImg" class="hero-img" src="" alt="Banner trang lưu trữ comm" />
+    <div class="hero-fade"></div>
+    <a href="#titleSection" class="scroll-cue">Cuộn xuống ↓</a>
+    <div class="lace-trim"></div>
+  </header>
+  <div class="lace-line"></div>
+
+  <main class="container">
+    <!-- Section 2: Scroll-Reveal Title -->
+    <section id="titleSection" class="title-section reveal">
+      <div class="flourish">✦ ARCHIVE GALLERY ✦</div>
+      <h1 id="siteTitle" class="site-title"></h1>
+      <p id="siteSubtitle" class="site-subtitle"></p>
+      <div class="gold-divider"></div>
+    </section>
+
+    <!-- Section 3: Cozy Intro -->
+    <section class="intro-card reveal">
+      <button class="intro-edit-btn" id="btnQuickEditIntro">✎ Sửa</button>
+      <p id="introText" class="intro-text"></p>
+      <div class="friends-row" id="friendsRow"></div>
+    </section>
+
+    <!-- Section 4: Link Gallery Library -->
+    <section id="librarySection" class="reveal">
+      <div class="library-header">
+        <div>
+          <h2 class="library-heading">
+            Thư viện Link Comm
+            <span id="syncBadge" class="sync-badge">Lưu trên máy</span>
+          </h2>
+        </div>
+        <div class="stats-strip" id="statsStrip"></div>
+      </div>
+
+      <div class="controls-wrap">
+        <div class="filter-pills" id="ownerFilters"></div>
+        <div class="search-sort">
+          <input type="text" id="searchInput" class="input-field search-input" placeholder="Tìm tên char, artist, tag..." />
+          <select id="statusFilter" class="select-field">
+            <option value="all">Mọi trạng thái</option>
+            <option value="done">Đã xong</option>
+            <option value="wip">Đang làm (WIP)</option>
+            <option value="planned">Dự định</option>
+          </select>
+          <select id="sortSelect" class="select-field">
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="az">Tên A → Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="cardsGrid" class="cards-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span id="footerText">Lưu trữ Comm của Tui & Bạn Tui • Hosted on GitHub Pages</span>
+  </footer>
+
+  <!-- Modal: Add / Edit Comm -->
+  <div class="modal-backdrop" id="commModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="commModalTitle">Thêm Link Comm</h3>
+        <button class="close-btn" data-close="commModal">×</button>
+      </div>
+      <form id="commForm">
+        <input type="hidden" id="commId" />
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="fTitle">Tên Comm / Char *</label>
+            <input type="text" id="fTitle" class="input-field" required placeholder="VD: Fullbody OC Mèo Hoàng Kim" />
+          </div>
+          <div class="form-group">
+            <label for="fOwner">Của ai?</label>
+            <select id="fOwner" class="select-field"></select>
+          </div>
+          <div class="form-group">
+            <label for="fStatus">Trạng thái</label>
+            <select id="fStatus" class="select-field">
+              <option value="done">Đã xong</option>
+              <option value="wip">Đang làm (WIP)</option>
+              <option value="planned">Dự định</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label for="fUrl">Link Comm (GG Drive, Twitter, Facebook, Carrd...) *</label>
+            <input type="url" id="fUrl" class="input-field" required placeholder="https://..." />
+          </div>
+          <div class="form-group full">
+            <label for="fImage">Link ảnh bìa / preview (bỏ trống sẽ dùng ảnh mặc định)</label>
+            <input type="url" id="fImage" class="input-field" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label for="fArtist">Artist / Nguồn</label>
+            <input type="text" id="fArtist" class="input-field" placeholder="VD: @artist_abc" />
+          </div>
+          <div class="form-group">
+            <label for="fPrice">Giá / Ghi chú ngắn</label>
+            <input type="text" id="fPrice" class="input-field" placeholder="VD: 350k / Quà tặng" />
+          </div>
+          <div class="form-group full">
+            <label for="fTags">Tags (ngăn cách bằng dấu phẩy)</label>
+            <input type="text" id="fTags" class="input-field" placeholder="chibi, couple, ggai, fullrender" />
+          </div>
+          <div class="form-group full">
+            <label for="fNotes">Mô tả / Ghi chú thêm</label>
+            <textarea id="fNotes" class="textarea-field" rows="3" placeholder="Ghi chú về char, cảm nhận hoặc pass giải nén..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-close="commModal">Hủy</button>
+          <button type="submit" class="btn primary">Lưu Comm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Page Settings -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Chỉnh sửa giao diện trang</h3>
+        <button class="close-btn" data-close="settingsModal">×</button>
+      </div>
+      <form id="settingsForm">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="sBanner">Link ảnh Banner đầu trang</label>
+            <input type="url" id="sBanner" class="input-field" placeholder="https://..." />
+          </div>
+          <div class="form-group full">
+            <label for="sTitle">Tên trang web</label>
+            <input type="text" id="sTitle" class="input-field" />
+          </div>
+          <div class="form-group full">
+            <label for="sSubtitle">Dòng phụ dưới tên web</label>
+            <input type="text" id="sSubtitle" class="input-field" />
+          </div>
+          <div class="form-group full">
+            <label for="sIntro">Đoạn giới thiệu</label>
+            <textarea id="sIntro" class="textarea-field" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="sOwner1Name">Tên người 1 (Tui)</label>
+            <input type="text" id="sOwner1Name" class="input-field" />
+          </div>
+          <div class="form-group">
+            <label for="sOwner1Avatar">Link avatar người 1</label>
+            <input type="url" id="sOwner1Avatar" class="input-field" />
+          </div>
+          <div class="form-group">
+            <label for="sOwner2Name">Tên người 2 (Bạn Tui)</label>
+            <input type="text" id="sOwner2Name" class="input-field" />
+          </div>
+          <div class="form-group">
+            <label for="sOwner2Avatar">Link avatar người 2</label>
+            <input type="url" id="sOwner2Avatar" class="input-field" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-close="settingsModal">Đóng</button>
+          <button type="submit" class="btn primary">Lưu thay đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Sync & Backup -->
+  <div class="modal-backdrop" id="syncModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Sao lưu & Đồng bộ 2 người</h3>
+        <button class="close-btn" data-close="syncModal">×</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Cách 1: Xuất / Nhập file JSON (Nhanh, không cần tài khoản)</label>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn" id="btnExportJson">⬇ Xuất file JSON</button>
+            <label class="btn" style="cursor:pointer;">
+              ⬆ Nhập file JSON
+              <input type="file" id="importJsonInput" accept=".json" style="display:none;" />
+            </label>
+          </div>
+        </div>
+        <div class="form-group full" style="margin-top:8px;">
+          <label>Cách 2: Đồng bộ trực tiếp bằng Supabase (Tui sửa là bạn tui thấy liền)</label>
+          <input type="url" id="sbUrl" class="input-field" placeholder="Supabase Project URL (https://xxx.supabase.co)" />
+          <input type="text" id="sbKey" class="input-field" placeholder="Supabase Anon Public Key" style="margin-top:6px;" />
+        </div>
+        <div class="form-group full">
+          <label>Lệnh SQL tạo bảng trên Supabase (bấm copy rồi dán vào SQL Editor)</label>
+          <div class="code-box" id="sqlSnippet">create table if not exists comm_links (
+  id text primary key,
+  title text not null,
+  owner text not null,
+  url text not null,
+  image text,
+  artist text,
+  status text default 'done',
+  price text,
+  tags text,
+  notes text,
+  created_at bigint
+);
+alter table comm_links enable row level security;
+create policy "Public access" on comm_links for all using (true) with check (true);</div>
+          <button type="button" class="btn" id="btnCopySql" style="margin-top:6px; align-self:flex-start;">Copy SQL</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" id="btnDisconnectSb">Ngắt Supabase</button>
+        <button type="button" class="btn primary" id="btnSaveSb">Kết nối & Đồng bộ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Delete Confirm -->
+  <div class="modal-backdrop" id="deleteModal">
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Xác nhận xóa</h3>
+        <button class="close-btn" data-close="deleteModal">×</button>
+      </div>
+      <p id="deleteMsg" style="margin:0 0 10px;">Bạn có chắc muốn xóa link comm này không?</p>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-close="deleteModal">Hủy</button>
+        <button type="button" class="btn danger" id="btnConfirmDelete">Xóa luôn</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script>
+    const STORAGE_KEY_COMMS = 'comm_archive_items_v2';
+    const STORAGE_KEY_SETTINGS = 'comm_archive_settings_v2';
+    const STORAGE_KEY_THEME = 'comm_archive_theme_v2';
+    const STORAGE_KEY_SB = 'comm_archive_supabase_v2';
+
+    const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80';
+
+    const DEFAULT_SETTINGS = {
+      banner: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1600&q=85',
+      title: 'Góc Lưu Trữ Comm',
+      subtitle: 'Nơi gom gọn những chiếc comm xinh xắn của hai đứa mình.',
+      intro: 'Chào mừng ghé thăm kho lưu trữ nhỏ của tụi mình.\nKéo xuống dưới để xem danh sách link comm, tìm theo tên char hoặc lọc riêng từng đứa nha ✿',
+      owner1Name: 'Của Tui',
+      owner1Avatar: 'https://api.dicebear.com/9.x/lorelei/svg?seed=Tui&backgroundColor=f5e6cc',
+      owner2Name: 'Của Bạn Tui',
+      owner2Avatar: 'https://api.dicebear.com/9.x/lorelei/svg?seed=BanTui&backgroundColor=ead7b7'
+    };
+
+    const SAMPLE_COMMS = [
+      {
+        id: 'sample-1',
+        title: 'Couple Chibi Giờ Trà Chiều',
+        owner: 'owner1',
+        url: 'https://drive.google.com',
+        image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=900&q=80',
+        artist: '@mimi_art',
+        status: 'done',
+        price: '320k',
+        tags: 'chibi, couple, ggai',
+        notes: 'File PNG tách nền + bản có khung viền ren trong thư mục Drive.',
+        created_at: Date.now() - 3600000 * 72
+      },
+      {
+        id: 'sample-2',
+        title: 'Halfbody OC Tóc Bạc',
+        owner: 'owner2',
+        url: 'https://drive.google.com',
+        image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=900&q=80',
+        artist: '@kuro_draws',
+        status: 'wip',
+        price: '450k',
+        tags: 'halfbody, oc, fullrender',
+        notes: 'Artist đã gửi bản sketch, đang chờ lên màu.',
+        created_at: Date.now() - 3600000 * 48
+      },
+      {
+        id: 'sample-3',
+        title: 'Set Sticker Biểu Cảm Động',
+        owner: 'owner1',
+        url: 'https://drive.google.com',
+        image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=900&q=80',
+        artist: '@mochi_gif',
+        status: 'done',
+        price: '250k',
+        tags: 'gif, sticker, cute',
+        notes: 'Gồm 4 bé GIF nhún nhảy dùng làm icon trang trí.',
+        created_at: Date.now() - 3600000 * 24
+      },
+      {
+        id: 'sample-4',
+        title: 'Minh Họa Bìa Concept Cổ Điển',
+        owner: 'owner2',
+        url: 'https://drive.google.com',
+        image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=80',
+        artist: '@serein_studio',
+        status: 'planned',
+        price: '600k',
+        tags: 'illustration, vintage, banner',
+        notes: 'Dự định đặt đợt mở slot tháng sau làm banner mới.',
+        created_at: Date.now() - 3600000 * 6
+      }
+    ];
+
+    let state = {
+      comms: [],
+      settings: { ...DEFAULT_SETTINGS },
+      sb: { url: '', key: '' },
+      filterOwner: 'all',
+      filterStatus: 'all',
+      search: '',
+      sort: 'newest',
+      pendingDeleteId: null
+    };
+
+    // Helpers
+    function toast(msg) {
+      const wrap = document.getElementById('toastWrap');
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = msg;
+      wrap.appendChild(el);
+      setTimeout(() => el.remove(), 2600);
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function escapeHtml(str = '') {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function loadLocal() {
+      try {
+        const savedSettings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS));
+        if (savedSettings) state.settings = { ...DEFAULT_SETTINGS, ...savedSettings };
+      } catch {}
+
+      try {
+        const savedComms = JSON.parse(localStorage.getItem(STORAGE_KEY_COMMS));
+        state.comms = Array.isArray(savedComms) ? savedComms : [...SAMPLE_COMMS];
+      } catch {
+        state.comms = [...SAMPLE_COMMS];
+      }
+
+      try {
+        const savedSb = JSON.parse(localStorage.getItem(STORAGE_KEY_SB));
+        if (savedSb && savedSb.url && savedSb.key) state.sb = savedSb;
+      } catch {}
+
+      const savedTheme = localStorage.getItem(STORAGE_KEY_THEME) || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('btnTheme').textContent = savedTheme === 'dark' ? '☀' : '☾';
+    }
+
+    function saveLocal() {
+      localStorage.setItem(STORAGE_KEY_COMMS, JSON.stringify(state.comms));
+      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(state.settings));
+    }
+
+    // Supabase REST API (no external SDK required)
+    function isCloudReady() {
+      return Boolean(state.sb.url && state.sb.key);
+    }
+
+    async function sbFetch(path, options = {}) {
+      const base = state.sb.url.replace(/\/$/, '');
+      const res = await fetch(`${base}/rest/v1/${path}`, {
+        ...options,
+        headers: {
+          'apikey': state.sb.key,
+          'Authorization': `Bearer ${state.sb.key}`,
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        }
+      });
+      if (!res.ok) throw new Error('Supabase error ' + res.status);
+      return res.status === 204 ? null : res.json();
+    }
+
+    async function syncFromCloud() {
+      if (!isCloudReady()) return;
+      try {
+        const rows = await sbFetch('comm_links?select=*&order=created_at.desc');
+        if (Array.isArray(rows)) {
+          state.comms = rows;
+          saveLocal();
+          renderAll();
+          toast('Đã đồng bộ từ Supabase');
+        }
+      } catch (e) {
+        toast('Không kết nối được Supabase — đang dùng bản lưu trên máy');
+      }
+    }
+
+    async function upsertCloudItem(item) {
+      if (!isCloudReady()) return;
+      await sbFetch('comm_links', {
+        method: 'POST',
+        headers: { 'Prefer': 'resolution=merge-duplicates' },
+        body: JSON.stringify(item)
+      });
+    }
+
+    async function deleteCloudItem(id) {
+      if (!isCloudReady()) return;
+      await sbFetch(`comm_links?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+    }
+
+    // Rendering
+    function renderPageInfo() {
+      const s = state.settings;
+      document.getElementById('heroImg').src = s.banner || DEFAULT_SETTINGS.banner;
+      document.getElementById('siteTitle').textContent = s.title;
+      document.getElementById('siteSubtitle').textContent = s.subtitle;
+      document.getElementById('introText').textContent = s.intro;
+      document.title = s.title;
+      document.getElementById('footerText').textContent = `${s.title} • ${s.owner1Name} & ${s.owner2Name}`;
+
+      const friendsRow = document.getElementById('friendsRow');
+      friendsRow.innerHTML = `
+        <button class="friend-pill" data-owner="owner1">
+          <img src="${escapeHtml(s.owner1Avatar)}" alt="${escapeHtml(s.owner1Name)}" onerror="this.src='${DEFAULT_SETTINGS.owner1Avatar}'" />
+          <span>${escapeHtml(s.owner1Name)}</span>
+        </button>
+        <button class="friend-pill" data-owner="owner2">
+          <img src="${escapeHtml(s.owner2Avatar)}" alt="${escapeHtml(s.owner2Name)}" onerror="this.src='${DEFAULT_SETTINGS.owner2Avatar}'" />
+          <span>${escapeHtml(s.owner2Name)}</span>
+        </button>
+      `;
+      friendsRow.querySelectorAll('.friend-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.filterOwner = btn.dataset.owner;
+          renderFilters();
+          renderCards();
+          document.getElementById('librarySection').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      const ownerSelect = document.getElementById('fOwner');
+      ownerSelect.innerHTML = `
+        <option value="owner1">${escapeHtml(s.owner1Name)}</option>
+        <option value="owner2">${escapeHtml(s.owner2Name)}</option>
+      `;
+
+      const badge = document.getElementById('syncBadge');
+      if (isCloudReady()) {
+        badge.textContent = '☁ Đã nối Supabase';
+        badge.classList.add('cloud');
+      } else {
+        badge.textContent = 'Lưu trên máy';
+        badge.classList.remove('cloud');
+      }
+    }
+
+    function renderFilters() {
+      const s = state.settings;
+      const container = document.getElementById('ownerFilters');
+      const items = [
+        { key: 'all', label: 'Tất cả' },
+        { key: 'owner1', label: s.owner1Name },
+        { key: 'owner2', label: s.owner2Name }
+      ];
+      container.innerHTML = items.map(it => `
+        <button class="pill-btn ${state.filterOwner === it.key ? 'active' : ''}" data-key="${it.key}">
+          ${escapeHtml(it.label)}
+        </button>
+      `).join('');
+      container.querySelectorAll('.pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.filterOwner = btn.dataset.key;
+          renderFilters();
+          renderCards();
+        });
+      });
+    }
+
+    function renderStats() {
+      const total = state.comms.length;
+      const done = state.comms.filter(c => c.status === 'done').length;
+      const wip = state.comms.filter(c => c.status === 'wip').length;
+      document.getElementById('statsStrip').innerHTML = `
+        <span class="stat-chip">Tổng: <strong>${total}</strong></span>
+        <span class="stat-chip">Xong: <strong>${done}</strong></span>
+        <span class="stat-chip">WIP: <strong>${wip}</strong></span>
+      `;
+    }
+
+    function statusLabel(st) {
+      if (st === 'done') return 'Đã xong';
+      if (st === 'wip') return 'WIP';
+      return 'Dự định';
+    }
+
+    function ownerLabel(ow) {
+      return ow === 'owner2' ? state.settings.owner2Name : state.settings.owner1Name;
+    }
+
+    function renderCards() {
+      const q = state.search.trim().toLowerCase();
+      let list = state.comms.filter(item => {
+        if (state.filterOwner !== 'all' && item.owner !== state.filterOwner) return false;
+        if (state.filterStatus !== 'all' && item.status !== state.filterStatus) return false;
+        if (q) {
+          const hay = `${item.title} ${item.artist} ${item.tags} ${item.notes} ${item.price}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      if (state.sort === 'newest') list.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+      if (state.sort === 'oldest') list.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
+      if (state.sort === 'az') list.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'vi'));
+
+      const grid = document.getElementById('cardsGrid');
+      if (!list.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Chưa có link comm nào khớp bộ lọc. Bấm <strong>+ Thêm Comm</strong> để lưu cái đầu tiên nha!</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(item => {
+        const tags = (item.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        return `
+          <article class="comm-card">
+            <div class="card-thumb-wrap">
+              <img class="card-thumb" src="${escapeHtml(item.image || DEFAULT_THUMB)}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.src='${DEFAULT_THUMB}'" />
+              <div class="card-badges">
+                <span class="badge badge-owner">${escapeHtml(ownerLabel(item.owner))}</span>
+                <span class="badge badge-status ${escapeHtml(item.status)}">${statusLabel(item.status)}</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">${escapeHtml(item.title)}</h3>
+              <div class="card-meta">
+                ${item.artist ? `<span>✎ ${escapeHtml(item.artist)}</span>` : ''}
+                ${item.price ? `<span>✦ ${escapeHtml(item.price)}</span>` : ''}
+              </div>
+              ${item.notes ? `<p class="card-notes">${escapeHtml(item.notes)}</p>` : ''}
+              ${tags.length ? `<div class="card-tags">${tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+            </div>
+            <div class="card-actions">
+              <a class="action-btn open-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Mở Link ↗</a>
+              <button class="action-btn" data-copy="${escapeHtml(item.url)}" title="Copy link">Copy</button>
+              <button class="action-btn" data-edit="${escapeHtml(item.id)}" title="Chỉnh sửa">Sửa</button>
+              <button class="action-btn delete" data-del="${escapeHtml(item.id)}" title="Xóa">Xóa</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      grid.querySelectorAll('[data-copy]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(btn.dataset.copy);
+            toast('Đã copy link!');
+          } catch {
+            toast('Không copy tự động được, bạn mở link trực tiếp nha');
+          }
+        });
+      });
+
+      grid.querySelectorAll('[data-edit]').forEach(btn => {
+        btn.addEventListener('click', () => openEditComm(btn.dataset.edit));
+      });
+
+      grid.querySelectorAll('[data-del]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.pendingDeleteId = btn.dataset.del;
+          const found = state.comms.find(c => c.id === state.pendingDeleteId);
+          document.getElementById('deleteMsg').textContent = `Bạn có chắc muốn xóa "${found ? found.title : 'link này'}" không?`;
+          openModal('deleteModal');
+        });
+      });
+    }
+
+    function renderAll() {
+      renderPageInfo();
+      renderFilters();
+      renderStats();
+      renderCards();
+    }
+
+    function openAddComm() {
+      document.getElementById('commModalTitle').textContent = 'Thêm Link Comm';
+      document.getElementById('commForm').reset();
+      document.getElementById('commId').value = '';
+      openModal('commModal');
+    }
+
+    function openEditComm(id) {
+      const item = state.comms.find(c => c.id === id);
+      if (!item) return;
+      document.getElementById('commModalTitle').textContent = 'Chỉnh sửa Comm';
+      document.getElementById('commId').value = item.id;
+      document.getElementById('fTitle').value = item.title || '';
+      document.getElementById('fOwner').value = item.owner || 'owner1';
+      document.getElementById('fStatus').value = item.status || 'done';
+      document.getElementById('fUrl').value = item.url || '';
+      document.getElementById('fImage').value = item.image || '';
+      document.getElementById('fArtist').value = item.artist || '';
+      document.getElementById('fPrice').value = item.price || '';
+      document.getElementById('fTags').value = item.tags || '';
+      document.getElementById('fNotes').value = item.notes || '';
+      openModal('commModal');
+    }
+
+    function openSettings() {
+      const s = state.settings;
+      document.getElementById('sBanner').value = s.banner;
+      document.getElementById('sTitle').value = s.title;
+      document.getElementById('sSubtitle').value = s.subtitle;
+      document.getElementById('sIntro').value = s.intro;
+      document.getElementById('sOwner1Name').value = s.owner1Name;
+      document.getElementById('sOwner1Avatar').value = s.owner1Avatar;
+      document.getElementById('sOwner2Name').value = s.owner2Name;
+      document.getElementById('sOwner2Avatar').value = s.owner2Avatar;
+      openModal('settingsModal');
+    }
+
+    function openSync() {
+      document.getElementById('sbUrl').value = state.sb.url || '';
+      document.getElementById('sbKey').value = state.sb.key || '';
+      openModal('syncModal');
+    }
+
+    // Event bindings
+    document.getElementById('btnOpenAdd').addEventListener('click', openAddComm);
+    document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
+    document.getElementById('btnQuickEditIntro').addEventListener('click', openSettings);
+    document.getElementById('btnOpenSync').addEventListener('click', openSync);
+
+    document.getElementById('btnTheme').addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem(STORAGE_KEY_THEME, next);
+      document.getElementById('btnTheme').textContent = next === 'dark' ? '☀' : '☾';
+    });
+
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn.dataset.close));
+    });
+
+    document.querySelectorAll('.modal-backdrop').forEach(bd => {
+      bd.addEventListener('click', e => {
+        if (e.target === bd) bd.classList.remove('open');
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      state.search = e.target.value;
+      renderCards();
+    });
+
+    document.getElementById('statusFilter').addEventListener('change', e => {
+      state.filterStatus = e.target.value;
+      renderCards();
+    });
+
+    document.getElementById('sortSelect').addEventListener('change', e => {
+      state.sort = e.target.value;
+      renderCards();
+    });
+
+    document.getElementById('commForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const existingId = document.getElementById('commId').value;
+      const item = {
+        id: existingId || 'comm-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+        title: document.getElementById('fTitle').value.trim(),
+        owner: document.getElementById('fOwner').value,
+        status: document.getElementById('fStatus').value,
+        url: document.getElementById('fUrl').value.trim(),
+        image: document.getElementById('fImage').value.trim(),
+        artist: document.getElementById('fArtist').value.trim(),
+        price: document.getElementById('fPrice').value.trim(),
+        tags: document.getElementById('fTags').value.trim(),
+        notes: document.getElementById('fNotes').value.trim(),
+        created_at: existingId
+          ? (state.comms.find(c => c.id === existingId)?.created_at || Date.now())
+          : Date.now()
+      };
+
+      if (existingId) {
+        state.comms = state.comms.map(c => c.id === existingId ? item : c);
+      } else {
+        state.comms.unshift(item);
+      }
+
+      saveLocal();
+      renderAll();
+      closeModal('commModal');
+      toast(existingId ? 'Đã cập nhật comm!' : 'Đã thêm comm mới!');
+
+      if (isCloudReady()) {
+        try { await upsertCloudItem(item); } catch { toast('Lưu máy OK, nhưng đồng bộ cloud bị lỗi'); }
+      }
+    });
+
+    document.getElementById('settingsForm').addEventListener('submit', e => {
+      e.preventDefault();
+      state.settings = {
+        banner: document.getElementById('sBanner').value.trim() || DEFAULT_SETTINGS.banner,
+        title: document.getElementById('sTitle').value.trim() || DEFAULT_SETTINGS.title,
+        subtitle: document.getElementById('sSubtitle').value.trim(),
+        intro: document.getElementById('sIntro').value.trim(),
+        owner1Name: document.getElementById('sOwner1Name').value.trim() || 'Của Tui',
+        owner1Avatar: document.getElementById('sOwner1Avatar').value.trim() || DEFAULT_SETTINGS.owner1Avatar,
+        owner2Name: document.getElementById('sOwner2Name').value.trim() || 'Của Bạn Tui',
+        owner2Avatar: document.getElementById('sOwner2Avatar').value.trim() || DEFAULT_SETTINGS.owner2Avatar
+      };
+      saveLocal();
+      renderAll();
+      closeModal('settingsModal');
+      toast('Đã lưu giao diện trang!');
+    });
+
+    document.getElementById('btnConfirmDelete').addEventListener('click', async () => {
+      const id = state.pendingDeleteId;
+      if (!id) return;
+      state.comms = state.comms.filter(c => c.id !== id);
+      saveLocal();
+      renderAll();
+      closeModal('deleteModal');
+      toast('Đã xóa comm!');
+      if (isCloudReady()) {
+        try { await deleteCloudItem(id); } catch {}
+      }
+      state.pendingDeleteId = null;
+    });
+
+    document.getElementById('btnExportJson').addEventListener('click', () => {
+      const payload = { settings: state.settings, comms: state.comms };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'comm-archive-backup.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast('Đã tải file sao lưu JSON!');
+    });
+
+    document.getElementById('importJsonInput').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (data.settings) state.settings = { ...DEFAULT_SETTINGS, ...data.settings };
+          if (Array.isArray(data.comms)) state.comms = data.comms;
+          saveLocal();
+          renderAll();
+          closeModal('syncModal');
+          toast('Đã nhập dữ liệu thành công!');
+        } catch {
+          toast('File JSON không hợp lệ!');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    });
+
+    document.getElementById('btnCopySql').addEventListener('click', async () => {
+      await navigator.clipboard.writeText(document.getElementById('sqlSnippet').textContent);
+      toast('Đã copy lệnh SQL!');
+    });
+
+    document.getElementById('btnSaveSb').addEventListener('click', async () => {
+      const url = document.getElementById('sbUrl').value.trim();
+      const key = document.getElementById('sbKey').value.trim();
+      if (!url || !key) {
+        toast('Vui lòng nhập đủ URL và Anon Key!');
+        return;
+      }
+      state.sb = { url, key };
+      localStorage.setItem(STORAGE_KEY_SB, JSON.stringify(state.sb));
+      closeModal('syncModal');
+      renderPageInfo();
+      await syncFromCloud();
+    });
+
+    document.getElementById('btnDisconnectSb').addEventListener('click', () => {
+      state.sb = { url: '', key: '' };
+      localStorage.removeItem(STORAGE_KEY_SB);
+      closeModal('syncModal');
+      renderPageInfo();
+      toast('Đã ngắt kết nối Supabase');
+    });
+
+    // Scroll Reveal Observer
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Init
+    loadLocal();
+    renderAll();
+    if (isCloudReady()) syncFromCloud();
+  </script>
+</body>
+</html>
