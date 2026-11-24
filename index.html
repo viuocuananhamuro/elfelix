@@ -12,7 +12,7 @@
       --bg: #0b0a0d;
       --surface: rgba(24, 21, 27, 0.72);
       --surface-solid: #18151b;
-      --surface-soft: rgba(38, 33, 42, 0.72);
+      --surface-soft: rgba(38, 33, 42, 0.74);
       --text: #f5efe6;
       --text-muted: #b5a99d;
       --gold: #e2bc76;
@@ -40,7 +40,7 @@
       --bg: #faf5ee;
       --surface: rgba(255, 253, 249, 0.78);
       --surface-solid: #fffdf9;
-      --surface-soft: rgba(245, 238, 228, 0.82);
+      --surface-soft: rgba(245, 238, 228, 0.84);
       --text: #342c26;
       --text-muted: #786a5e;
       --gold: #c69646;
@@ -161,20 +161,10 @@
     }
 
     /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--gold);
-    }
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
     /* Floating Minimal Control Bar */
     .floating-bar {
@@ -192,6 +182,7 @@
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
+      max-width: calc(100vw - 20px);
     }
 
     .icon-btn {
@@ -199,7 +190,7 @@
       background: transparent;
       color: var(--text);
       height: 36px;
-      padding: 0 12px;
+      padding: 0 11px;
       border-radius: 999px;
       font-family: var(--font-mono);
       font-size: 13px;
@@ -229,6 +220,26 @@
       filter: brightness(1.08);
       transform: translateY(-1px);
       color: #16120c;
+    }
+
+    .icon-btn.user-pill {
+      padding: 0 12px 0 5px;
+      border-color: var(--border-strong);
+      background: var(--gold-soft);
+      color: var(--gold);
+    }
+
+    .icon-btn.user-pill img {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--gold);
+      background: var(--surface-solid);
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     /* Section 1: Hero Banner */
@@ -448,7 +459,7 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
     }
 
     .friend-pill {
@@ -568,9 +579,7 @@
       transition: all 0.2s;
     }
 
-    .pill-btn:hover {
-      border-color: var(--gold);
-    }
+    .pill-btn:hover { border-color: var(--gold); }
 
     .pill-btn.active {
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -599,6 +608,7 @@
       padding: 9px 13px;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
     }
 
     .select-field option {
@@ -615,6 +625,11 @@
       flex: 1;
       min-width: 170px;
       max-width: 280px;
+      width: auto;
+    }
+
+    .search-sort .select-field {
+      width: auto;
     }
 
     /* Gallery Grid */
@@ -667,9 +682,7 @@
       transition: transform 0.45s ease;
     }
 
-    .comm-card:hover .card-thumb {
-      transform: scale(1.05);
-    }
+    .comm-card:hover .card-thumb { transform: scale(1.05); }
 
     .card-badges {
       position: absolute;
@@ -770,6 +783,10 @@
       background: color-mix(in srgb, var(--surface-soft) 65%, transparent);
     }
 
+    .card-actions.guest-mode {
+      grid-template-columns: 1fr auto;
+    }
+
     .action-btn {
       border: 1px solid var(--border);
       background: var(--surface);
@@ -788,10 +805,7 @@
       transition: all 0.2s;
     }
 
-    .action-btn:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-    }
+    .action-btn:hover { border-color: var(--gold); color: var(--gold); }
 
     .action-btn.open-link {
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -799,15 +813,8 @@
       border-color: transparent;
     }
 
-    .action-btn.open-link:hover {
-      filter: brightness(1.08);
-      color: #16120c;
-    }
-
-    .action-btn.delete:hover {
-      border-color: var(--danger);
-      color: var(--danger);
-    }
+    .action-btn.open-link:hover { filter: brightness(1.08); color: #16120c; }
+    .action-btn.delete:hover { border-color: var(--danger); color: var(--danger); }
 
     .empty-state {
       text-align: center;
@@ -837,7 +844,7 @@
       position: fixed;
       inset: 0;
       z-index: 120;
-      background: rgba(5, 4, 8, 0.68);
+      background: rgba(5, 4, 8, 0.72);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       display: none;
@@ -846,9 +853,7 @@
       padding: 16px;
     }
 
-    .modal-backdrop.open {
-      display: flex;
-    }
+    .modal-backdrop.open { display: flex; }
 
     .modal {
       width: 100%;
@@ -894,6 +899,35 @@
       font-size: 16px;
     }
 
+    .tabs-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 8px;
+      border-radius: 9px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #16120c;
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -906,15 +940,59 @@
       gap: 5px;
     }
 
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
+    .form-group.full { grid-column: 1 / -1; }
 
     .form-group label {
       font-family: var(--font-mono);
       font-size: 12.5px;
       font-weight: 700;
       color: var(--text-muted);
+    }
+
+    .hint-box {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      background: var(--gold-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      line-height: 1.5;
+    }
+
+    .profile-preview {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .profile-preview img {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+    }
+
+    .profile-preview-meta {
+      min-width: 0;
+    }
+
+    .profile-preview-name {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--gold);
+    }
+
+    .profile-preview-email {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      word-break: break-all;
     }
 
     .modal-footer {
@@ -924,6 +1002,7 @@
       margin-top: 18px;
       padding-top: 12px;
       border-top: 1px dashed var(--border);
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -939,9 +1018,7 @@
       transition: all 0.2s;
     }
 
-    .btn:hover {
-      border-color: var(--gold);
-    }
+    .btn:hover { border-color: var(--gold); }
 
     .btn.primary {
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -964,7 +1041,7 @@
       font-size: 11.5px;
       white-space: pre-wrap;
       word-break: break-word;
-      max-height: 150px;
+      max-height: 170px;
       overflow-y: auto;
       color: var(--text);
     }
@@ -1011,25 +1088,13 @@
         right: 10px;
         justify-content: space-between;
       }
-      .icon-btn span.label {
-        display: none;
-      }
-      .icon-btn.primary span.label {
-        display: inline;
-      }
-      .hero {
-        height: 62vh;
-        min-height: 340px;
-      }
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      .search-sort {
-        justify-content: stretch;
-      }
-      .search-input {
-        max-width: none;
-      }
+      .icon-btn span.label { display: none; }
+      .icon-btn.primary span.label,
+      .icon-btn.user-pill span.label { display: inline; }
+      .hero { height: 62vh; min-height: 340px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .search-sort { justify-content: stretch; }
+      .search-input { max-width: none; }
     }
   </style>
 </head>
@@ -1045,9 +1110,14 @@
   <div class="page-layer">
     <!-- Floating Control Bar -->
     <nav class="floating-bar" aria-label="Điều khiển nhanh">
-      <button class="icon-btn primary" id="btnOpenAdd">+ <span class="label">Thêm Comm</span></button>
-      <button class="icon-btn" id="btnOpenSettings" title="Chỉnh sửa banner & giới thiệu">✿ <span class="label">Trang</span></button>
+      <button class="icon-btn primary hidden" id="btnOpenAdd">+ <span class="label">Thêm Comm</span></button>
+      <button class="icon-btn hidden" id="btnOpenSettings" title="Chỉnh sửa banner & giới thiệu">✿ <span class="label">Trang</span></button>
       <button class="icon-btn" id="btnOpenSync" title="Kết nối Supabase">☁ <span class="label">Supabase</span></button>
+      <button class="icon-btn primary" id="btnOpenAuth">✦ <span class="label">Đăng nhập</span></button>
+      <button class="icon-btn user-pill hidden" id="btnOpenProfile" title="Hồ sơ & Đổi tên Creator">
+        <img id="navUserAvatar" src="" alt="Avatar" />
+        <span class="label" id="navUserName">Creator</span>
+      </button>
       <button class="icon-btn" id="btnTheme" title="Đổi nền tối / sáng">☀</button>
     </nav>
 
@@ -1071,7 +1141,7 @@
 
       <!-- Section 3: Cozy Intro -->
       <section class="intro-card reveal">
-        <button class="intro-edit-btn" id="btnQuickEditIntro">✎ Sửa</button>
+        <button class="intro-edit-btn hidden" id="btnQuickEditIntro">✎ Sửa</button>
         <p id="introText" class="intro-text"></p>
         <div class="friends-row" id="friendsRow"></div>
       </section>
@@ -1091,7 +1161,7 @@
         <div class="controls-wrap">
           <div class="filter-pills" id="ownerFilters"></div>
           <div class="search-sort">
-            <input type="text" id="searchInput" class="input-field search-input" placeholder="Tìm tên char, artist, tag..." />
+            <input type="text" id="searchInput" class="input-field search-input" placeholder="Tìm tên char, artist, creator, tag..." />
             <select id="statusFilter" class="select-field">
               <option value="all">Mọi trạng thái</option>
               <option value="done">Đã xong</option>
@@ -1115,6 +1185,87 @@
     </footer>
   </div>
 
+  <!-- Modal: Auth (Login / Sign Up) -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Tài khoản Creator</h3>
+        <button class="close-btn" data-close="authModal">×</button>
+      </div>
+      <div class="tabs-row">
+        <button type="button" class="tab-btn active" id="tabLogin">Đăng nhập</button>
+        <button type="button" class="tab-btn" id="tabSignup">Đăng ký</button>
+      </div>
+      <form id="authForm">
+        <div class="form-grid">
+          <div class="form-group full hidden" id="signupCreatorWrap">
+            <label for="authCreatorName">Tên Creator hiển thị *</label>
+            <input type="text" id="authCreatorName" class="input-field" placeholder="VD: Mèo Vàng / Tui / Bạn Tui" />
+          </div>
+          <div class="form-group full">
+            <label for="authEmail">Email *</label>
+            <input type="email" id="authEmail" class="input-field" required placeholder="ban@email.com" />
+          </div>
+          <div class="form-group full">
+            <label for="authPassword">Mật khẩu *</label>
+            <input type="password" id="authPassword" class="input-field" required minlength="6" placeholder="Ít nhất 6 ký tự" />
+          </div>
+          <div class="form-group full">
+            <div class="hint-box" id="authModeHint">
+              Khách chưa đăng nhập vẫn xem & mở link bình thường. Đăng nhập để thêm, sửa, xóa comm và chỉnh tên Creator.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-close="authModal">Đóng</button>
+          <button type="submit" class="btn primary" id="btnAuthSubmit">Đăng nhập</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Creator Profile (Edit Creator Name) -->
+  <div class="modal-backdrop" id="profileModal">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Hồ sơ Creator</h3>
+        <button class="close-btn" data-close="profileModal">×</button>
+      </div>
+      <div class="profile-preview">
+        <img id="profileAvatarPreview" src="" alt="Avatar Creator" />
+        <div class="profile-preview-meta">
+          <div class="profile-preview-name" id="profileNamePreview">Creator</div>
+          <div class="profile-preview-email" id="profileEmailPreview"></div>
+        </div>
+      </div>
+      <form id="profileForm">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="pCreatorName">Tên Creator hiển thị *</label>
+            <input type="text" id="pCreatorName" class="input-field" required placeholder="Nhập tên Creator mới..." />
+          </div>
+          <div class="form-group full">
+            <label for="pCreatorAvatar">Link ảnh Avatar Creator (tùy chọn)</label>
+            <input type="url" id="pCreatorAvatar" class="input-field" placeholder="https://..." />
+          </div>
+          <div class="form-group full">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-family:var(--font-body); color:var(--text);">
+              <input type="checkbox" id="pSyncOldComms" checked style="accent-color: var(--gold); width:16px; height:16px;" />
+              <span>Tự động đổi tên Creator trên các comm cũ của mình luôn</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content:space-between;">
+          <button type="button" class="btn danger" id="btnLogout">Đăng xuất</button>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn" data-close="profileModal">Đóng</button>
+            <button type="submit" class="btn primary">Lưu tên Creator</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal: Add / Edit Comm -->
   <div class="modal-backdrop" id="commModal">
     <div class="modal">
@@ -1130,8 +1281,9 @@
             <input type="text" id="fTitle" class="input-field" required placeholder="VD: Fullbody OC Mèo Hoàng Kim" />
           </div>
           <div class="form-group">
-            <label for="fOwner">Của ai?</label>
-            <select id="fOwner" class="select-field"></select>
+            <label for="fCreator">Tên Creator (người đăng) *</label>
+            <input type="text" id="fCreator" class="input-field" required list="creatorSuggestions" placeholder="VD: Của Tui" />
+            <datalist id="creatorSuggestions"></datalist>
           </div>
           <div class="form-group">
             <label for="fStatus">Trạng thái</label>
@@ -1200,19 +1352,19 @@
             <textarea id="sIntro" class="textarea-field" rows="3"></textarea>
           </div>
           <div class="form-group">
-            <label for="sOwner1Name">Tên người 1 (Tui)</label>
+            <label for="sOwner1Name">Tên Creator 1 (hiển thị ở giới thiệu)</label>
             <input type="text" id="sOwner1Name" class="input-field" />
           </div>
           <div class="form-group">
-            <label for="sOwner1Avatar">Link avatar người 1</label>
+            <label for="sOwner1Avatar">Link avatar Creator 1</label>
             <input type="url" id="sOwner1Avatar" class="input-field" />
           </div>
           <div class="form-group">
-            <label for="sOwner2Name">Tên người 2 (Bạn Tui)</label>
+            <label for="sOwner2Name">Tên Creator 2 (hiển thị ở giới thiệu)</label>
             <input type="text" id="sOwner2Name" class="input-field" />
           </div>
           <div class="form-group">
-            <label for="sOwner2Avatar">Link avatar người 2</label>
+            <label for="sOwner2Avatar">Link avatar Creator 2</label>
             <input type="url" id="sOwner2Avatar" class="input-field" />
           </div>
         </div>
@@ -1233,16 +1385,18 @@
       </div>
       <div class="form-grid">
         <div class="form-group full">
-          <label>Thông tin Project Supabase (dán vào để 2 đứa đồng bộ trực tiếp)</label>
+          <label>Thông tin Project Supabase (dán vào để dùng Đăng nhập & Đồng bộ 2 người)</label>
           <input type="url" id="sbUrl" class="input-field" placeholder="Supabase Project URL (https://xxx.supabase.co)" />
           <input type="text" id="sbKey" class="input-field" placeholder="Supabase Anon Public Key" style="margin-top:6px;" />
         </div>
         <div class="form-group full">
-          <label>Lệnh SQL tạo bảng trên Supabase (bấm copy rồi dán vào SQL Editor)</label>
+          <label>Lệnh SQL cập nhật bảng trên Supabase (bấm copy rồi dán vào SQL Editor)</label>
           <div class="code-box" id="sqlSnippet">create table if not exists comm_links (
   id text primary key,
   title text not null,
-  owner text not null,
+  owner text not null default 'creator',
+  creator_name text,
+  user_id uuid,
   url text not null,
   image text,
   artist text,
@@ -1252,8 +1406,21 @@
   notes text,
   created_at bigint
 );
+
+alter table comm_links add column if not exists creator_name text;
+alter table comm_links add column if not exists user_id uuid;
+
 alter table comm_links enable row level security;
-create policy "Public access" on comm_links for all using (true) with check (true);</div>
+drop policy if exists "Public access" on comm_links;
+drop policy if exists "Public read" on comm_links;
+drop policy if exists "Auth write" on comm_links;
+
+create policy "Public read" on comm_links
+  for select using (true);
+
+create policy "Auth write" on comm_links
+  for all to authenticated
+  using (true) with check (true);</div>
           <button type="button" class="btn" id="btnCopySql" style="margin-top:6px; align-self:flex-start;">Copy SQL</button>
         </div>
       </div>
@@ -1286,18 +1453,21 @@ create policy "Public access" on comm_links for all using (true) with check (tru
     const STORAGE_KEY_SETTINGS = 'comm_archive_settings_v2';
     const STORAGE_KEY_THEME = 'comm_archive_theme_v3';
     const STORAGE_KEY_SB = 'comm_archive_supabase_v2';
+    const STORAGE_KEY_SESSION = 'comm_archive_session_v4';
+    const STORAGE_KEY_LOCAL_USERS = 'comm_archive_local_users_v4';
 
     const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80';
+    const avatarFor = (seed) => `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(seed || 'Creator')}&backgroundColor=2b2333`;
 
     const DEFAULT_SETTINGS = {
       banner: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1600&q=85',
       title: 'Góc Lưu Trữ Comm',
       subtitle: 'Nơi gom gọn những chiếc comm xinh xắn của hai đứa mình.',
-      intro: 'Chào mừng ghé thăm kho lưu trữ nhỏ của tụi mình.\nKéo xuống dưới để xem danh sách link comm, tìm theo tên char hoặc lọc riêng từng đứa nha ✿',
+      intro: 'Chào mừng ghé thăm kho lưu trữ nhỏ của tụi mình.\nKéo xuống dưới để xem danh sách link comm, tìm theo tên char hoặc lọc theo từng Creator nha ✿',
       owner1Name: 'Của Tui',
-      owner1Avatar: 'https://api.dicebear.com/9.x/lorelei/svg?seed=Tui&backgroundColor=2b2333',
+      owner1Avatar: avatarFor('Tui'),
       owner2Name: 'Của Bạn Tui',
-      owner2Avatar: 'https://api.dicebear.com/9.x/lorelei/svg?seed=BanTui&backgroundColor=332820'
+      owner2Avatar: avatarFor('BanTui')
     };
 
     const SAMPLE_COMMS = [
@@ -1305,6 +1475,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
         id: 'sample-1',
         title: 'Couple Chibi Giờ Trà Chiều',
         owner: 'owner1',
+        creator_name: 'Của Tui',
         url: 'https://drive.google.com',
         image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=900&q=80',
         artist: '@mimi_art',
@@ -1318,6 +1489,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
         id: 'sample-2',
         title: 'Halfbody OC Tóc Bạc',
         owner: 'owner2',
+        creator_name: 'Của Bạn Tui',
         url: 'https://drive.google.com',
         image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=900&q=80',
         artist: '@kuro_draws',
@@ -1331,6 +1503,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
         id: 'sample-3',
         title: 'Set Sticker Biểu Cảm Động',
         owner: 'owner1',
+        creator_name: 'Của Tui',
         url: 'https://drive.google.com',
         image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=900&q=80',
         artist: '@mochi_gif',
@@ -1344,6 +1517,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
         id: 'sample-4',
         title: 'Minh Họa Bìa Concept Cổ Điển',
         owner: 'owner2',
+        creator_name: 'Của Bạn Tui',
         url: 'https://drive.google.com',
         image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=80',
         artist: '@serein_studio',
@@ -1359,7 +1533,9 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       comms: [],
       settings: { ...DEFAULT_SETTINGS },
       sb: { url: '', key: '' },
-      filterOwner: 'all',
+      session: null, // { mode: 'supabase'|'local', access_token, user: { id, email, creator_name, avatar_url } }
+      authTab: 'login',
+      filterCreator: 'all',
       filterStatus: 'all',
       search: '',
       sort: 'newest',
@@ -1448,16 +1624,11 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       el.className = 'toast';
       el.textContent = msg;
       wrap.appendChild(el);
-      setTimeout(() => el.remove(), 2600);
+      setTimeout(() => el.remove(), 2800);
     }
 
-    function openModal(id) {
-      document.getElementById(id).classList.add('open');
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-    }
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
     function escapeHtml(str = '') {
       return String(str)
@@ -1465,6 +1636,21 @@ create policy "Public access" on comm_links for all using (true) with check (tru
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+    }
+
+    function getCommCreatorName(item) {
+      if (item.creator_name && item.creator_name.trim()) return item.creator_name.trim();
+      if (item.owner === 'owner2') return state.settings.owner2Name;
+      if (item.owner === 'owner1') return state.settings.owner1Name;
+      return item.owner || state.settings.owner1Name;
+    }
+
+    function isLoggedIn() {
+      return Boolean(state.session && state.session.user);
+    }
+
+    function isCloudReady() {
+      return Boolean(state.sb.url && state.sb.key);
     }
 
     function loadLocal() {
@@ -1485,7 +1671,11 @@ create policy "Public access" on comm_links for all using (true) with check (tru
         if (savedSb && savedSb.url && savedSb.key) state.sb = savedSb;
       } catch {}
 
-      // Default is dark mode
+      try {
+        const savedSession = JSON.parse(localStorage.getItem(STORAGE_KEY_SESSION));
+        if (savedSession && savedSession.user) state.session = savedSession;
+      } catch {}
+
       const savedTheme = localStorage.getItem(STORAGE_KEY_THEME) || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
       document.getElementById('btnTheme').textContent = savedTheme === 'dark' ? '☀' : '☾';
@@ -1496,24 +1686,61 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(state.settings));
     }
 
-    // Supabase REST API
-    function isCloudReady() {
-      return Boolean(state.sb.url && state.sb.key);
+    function saveSession(session) {
+      state.session = session;
+      if (session) {
+        localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(session));
+      } else {
+        localStorage.removeItem(STORAGE_KEY_SESSION);
+      }
+    }
+
+    // ===== Supabase Auth & REST Helpers =====
+    function getAuthToken() {
+      if (state.session && state.session.mode === 'supabase' && state.session.access_token) {
+        return state.session.access_token;
+      }
+      return state.sb.key;
     }
 
     async function sbFetch(path, options = {}) {
       const base = state.sb.url.replace(/\/$/, '');
+      const token = getAuthToken();
       const res = await fetch(`${base}/rest/v1/${path}`, {
         ...options,
         headers: {
           'apikey': state.sb.key,
-          'Authorization': `Bearer ${state.sb.key}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
           ...(options.headers || {})
         }
       });
-      if (!res.ok) throw new Error('Supabase error ' + res.status);
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        throw new Error(errText || ('Supabase error ' + res.status));
+      }
       return res.status === 204 ? null : res.json();
+    }
+
+    async function sbAuthFetch(endpoint, method = 'POST', body = null, useUserToken = false) {
+      const base = state.sb.url.replace(/\/$/, '');
+      const headers = {
+        'apikey': state.sb.key,
+        'Content-Type': 'application/json'
+      };
+      if (useUserToken && state.session?.access_token) {
+        headers['Authorization'] = `Bearer ${state.session.access_token}`;
+      }
+      const res = await fetch(`${base}/auth/v1/${endpoint}`, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.msg || data.error_description || data.message || 'Lỗi xác thực Supabase');
+      }
+      return data;
     }
 
     async function syncFromCloud() {
@@ -1527,7 +1754,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
           toast('Đã đồng bộ từ Supabase');
         }
       } catch (e) {
-        toast('Không kết nối được Supabase — kiểm tra lại URL/Key nha');
+        toast('Không tải được từ Supabase — kiểm tra lại URL/Key hoặc SQL nha');
       }
     }
 
@@ -1545,7 +1772,41 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       await sbFetch(`comm_links?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
     }
 
-    // Rendering
+    // ===== Local Fallback Auth (when Supabase isn't connected yet) =====
+    function getLocalUsers() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY_LOCAL_USERS)) || []; } catch { return []; }
+    }
+    function saveLocalUsers(users) {
+      localStorage.setItem(STORAGE_KEY_LOCAL_USERS, JSON.stringify(users));
+    }
+
+    // ===== Rendering =====
+    function renderAuthUI() {
+      const logged = isLoggedIn();
+      document.getElementById('btnOpenAdd').classList.toggle('hidden', !logged);
+      document.getElementById('btnOpenSettings').classList.toggle('hidden', !logged);
+      document.getElementById('btnQuickEditIntro').classList.toggle('hidden', !logged);
+      document.getElementById('btnOpenAuth').classList.toggle('hidden', logged);
+      document.getElementById('btnOpenProfile').classList.toggle('hidden', !logged);
+
+      if (logged) {
+        const u = state.session.user;
+        document.getElementById('navUserName').textContent = u.creator_name || 'Creator';
+        const av = document.getElementById('navUserAvatar');
+        av.src = u.avatar_url || avatarFor(u.creator_name);
+        av.onerror = () => { av.src = avatarFor(u.creator_name); };
+      }
+    }
+
+    function getAllCreatorNames() {
+      const set = new Set();
+      if (state.settings.owner1Name) set.add(state.settings.owner1Name);
+      if (state.settings.owner2Name) set.add(state.settings.owner2Name);
+      if (isLoggedIn() && state.session.user.creator_name) set.add(state.session.user.creator_name);
+      state.comms.forEach(c => set.add(getCommCreatorName(c)));
+      return Array.from(set).filter(Boolean);
+    }
+
     function renderPageInfo() {
       const s = state.settings;
       document.getElementById('heroImg').src = s.banner || DEFAULT_SETTINGS.banner;
@@ -1556,30 +1817,35 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       document.getElementById('footerText').textContent = `${s.title} • ${s.owner1Name} & ${s.owner2Name}`;
 
       const friendsRow = document.getElementById('friendsRow');
-      friendsRow.innerHTML = `
-        <button class="friend-pill" data-owner="owner1">
-          <img src="${escapeHtml(s.owner1Avatar)}" alt="${escapeHtml(s.owner1Name)}" onerror="this.src='${DEFAULT_SETTINGS.owner1Avatar}'" />
-          <span>${escapeHtml(s.owner1Name)}</span>
+      const pills = [
+        { name: s.owner1Name, avatar: s.owner1Avatar },
+        { name: s.owner2Name, avatar: s.owner2Avatar }
+      ];
+      if (isLoggedIn()) {
+        const curName = state.session.user.creator_name;
+        if (curName && !pills.some(p => p.name === curName)) {
+          pills.push({ name: curName, avatar: state.session.user.avatar_url || avatarFor(curName) });
+        }
+      }
+
+      friendsRow.innerHTML = pills.map(p => `
+        <button class="friend-pill" data-creator="${escapeHtml(p.name)}">
+          <img src="${escapeHtml(p.avatar)}" alt="${escapeHtml(p.name)}" onerror="this.src='${avatarFor(p.name)}'" />
+          <span>${escapeHtml(p.name)}</span>
         </button>
-        <button class="friend-pill" data-owner="owner2">
-          <img src="${escapeHtml(s.owner2Avatar)}" alt="${escapeHtml(s.owner2Name)}" onerror="this.src='${DEFAULT_SETTINGS.owner2Avatar}'" />
-          <span>${escapeHtml(s.owner2Name)}</span>
-        </button>
-      `;
+      `).join('');
+
       friendsRow.querySelectorAll('.friend-pill').forEach(btn => {
         btn.addEventListener('click', () => {
-          state.filterOwner = btn.dataset.owner;
+          state.filterCreator = btn.dataset.creator;
           renderFilters();
           renderCards();
           document.getElementById('librarySection').scrollIntoView({ behavior: 'smooth' });
         });
       });
 
-      const ownerSelect = document.getElementById('fOwner');
-      ownerSelect.innerHTML = `
-        <option value="owner1">${escapeHtml(s.owner1Name)}</option>
-        <option value="owner2">${escapeHtml(s.owner2Name)}</option>
-      `;
+      const datalist = document.getElementById('creatorSuggestions');
+      datalist.innerHTML = getAllCreatorNames().map(n => `<option value="${escapeHtml(n)}"></option>`).join('');
 
       const badge = document.getElementById('syncBadge');
       if (isCloudReady()) {
@@ -1592,21 +1858,23 @@ create policy "Public access" on comm_links for all using (true) with check (tru
     }
 
     function renderFilters() {
-      const s = state.settings;
       const container = document.getElementById('ownerFilters');
-      const items = [
-        { key: 'all', label: 'Tất cả' },
-        { key: 'owner1', label: s.owner1Name },
-        { key: 'owner2', label: s.owner2Name }
-      ];
+      const creators = getAllCreatorNames();
+      const items = [{ key: 'all', label: 'Tất cả' }, ...creators.map(n => ({ key: n, label: n }))];
+
+      if (state.filterCreator !== 'all' && !creators.includes(state.filterCreator)) {
+        state.filterCreator = 'all';
+      }
+
       container.innerHTML = items.map(it => `
-        <button class="pill-btn ${state.filterOwner === it.key ? 'active' : ''}" data-key="${it.key}">
+        <button class="pill-btn ${state.filterCreator === it.key ? 'active' : ''}" data-key="${escapeHtml(it.key)}">
           ${escapeHtml(it.label)}
         </button>
       `).join('');
+
       container.querySelectorAll('.pill-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          state.filterOwner = btn.dataset.key;
+          state.filterCreator = btn.dataset.key;
           renderFilters();
           renderCards();
         });
@@ -1630,17 +1898,16 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       return 'Dự định';
     }
 
-    function ownerLabel(ow) {
-      return ow === 'owner2' ? state.settings.owner2Name : state.settings.owner1Name;
-    }
-
     function renderCards() {
       const q = state.search.trim().toLowerCase();
+      const logged = isLoggedIn();
+
       let list = state.comms.filter(item => {
-        if (state.filterOwner !== 'all' && item.owner !== state.filterOwner) return false;
+        const cName = getCommCreatorName(item);
+        if (state.filterCreator !== 'all' && cName !== state.filterCreator) return false;
         if (state.filterStatus !== 'all' && item.status !== state.filterStatus) return false;
         if (q) {
-          const hay = `${item.title} ${item.artist} ${item.tags} ${item.notes} ${item.price}`.toLowerCase();
+          const hay = `${item.title} ${cName} ${item.artist} ${item.tags} ${item.notes} ${item.price}`.toLowerCase();
           if (!hay.includes(q)) return false;
         }
         return true;
@@ -1652,18 +1919,19 @@ create policy "Public access" on comm_links for all using (true) with check (tru
 
       const grid = document.getElementById('cardsGrid');
       if (!list.length) {
-        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Chưa có link comm nào khớp bộ lọc. Bấm <strong>+ Thêm Comm</strong> để lưu cái đầu tiên nha!</div>`;
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Chưa có link comm nào khớp bộ lọc.${logged ? ' Bấm <strong>+ Thêm Comm</strong> để lưu cái đầu tiên nha!' : ''}</div>`;
         return;
       }
 
       grid.innerHTML = list.map(item => {
         const tags = (item.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        const creatorDisplay = getCommCreatorName(item);
         return `
           <article class="comm-card">
             <div class="card-thumb-wrap">
               <img class="card-thumb" src="${escapeHtml(item.image || DEFAULT_THUMB)}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.src='${DEFAULT_THUMB}'" />
               <div class="card-badges">
-                <span class="badge badge-owner">${escapeHtml(ownerLabel(item.owner))}</span>
+                <span class="badge badge-owner">✦ ${escapeHtml(creatorDisplay)}</span>
                 <span class="badge badge-status ${escapeHtml(item.status)}">${statusLabel(item.status)}</span>
               </div>
             </div>
@@ -1676,11 +1944,11 @@ create policy "Public access" on comm_links for all using (true) with check (tru
               ${item.notes ? `<p class="card-notes">${escapeHtml(item.notes)}</p>` : ''}
               ${tags.length ? `<div class="card-tags">${tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
             </div>
-            <div class="card-actions">
+            <div class="card-actions ${logged ? '' : 'guest-mode'}">
               <a class="action-btn open-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Mở Link ↗</a>
               <button class="action-btn" data-copy="${escapeHtml(item.url)}" title="Copy link">Copy</button>
-              <button class="action-btn" data-edit="${escapeHtml(item.id)}" title="Chỉnh sửa">Sửa</button>
-              <button class="action-btn delete" data-del="${escapeHtml(item.id)}" title="Xóa">Xóa</button>
+              ${logged ? `<button class="action-btn" data-edit="${escapeHtml(item.id)}" title="Chỉnh sửa">Sửa</button>` : ''}
+              ${logged ? `<button class="action-btn delete" data-del="${escapeHtml(item.id)}" title="Xóa">Xóa</button>` : ''}
             </div>
           </article>
         `;
@@ -1712,26 +1980,61 @@ create policy "Public access" on comm_links for all using (true) with check (tru
     }
 
     function renderAll() {
+      renderAuthUI();
       renderPageInfo();
       renderFilters();
       renderStats();
       renderCards();
     }
 
+    // ===== Modals Openers =====
+    function setAuthTab(tab) {
+      state.authTab = tab;
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+      document.getElementById('signupCreatorWrap').classList.toggle('hidden', tab !== 'signup');
+      document.getElementById('authCreatorName').required = (tab === 'signup');
+      document.getElementById('btnAuthSubmit').textContent = tab === 'signup' ? 'Tạo tài khoản' : 'Đăng nhập';
+      document.getElementById('authModeHint').textContent = isCloudReady()
+        ? 'Đang kết nối Supabase Auth — đăng nhập xong bạn có thể thêm, sửa, xóa comm và đổi tên Creator bất cứ lúc nào.'
+        : 'Chưa nối Supabase nên tài khoản sẽ lưu tạm trên máy này. Bạn có thể bấm nút ☁ Supabase để nối tài khoản thật nha.';
+    }
+
+    function openAuth() {
+      document.getElementById('authForm').reset();
+      setAuthTab('login');
+      openModal('authModal');
+    }
+
+    function openProfile() {
+      if (!isLoggedIn()) return;
+      const u = state.session.user;
+      document.getElementById('profileAvatarPreview').src = u.avatar_url || avatarFor(u.creator_name);
+      document.getElementById('profileNamePreview').textContent = u.creator_name || 'Creator';
+      document.getElementById('profileEmailPreview').textContent = u.email || '';
+      document.getElementById('pCreatorName').value = u.creator_name || '';
+      document.getElementById('pCreatorAvatar').value = u.avatar_url || '';
+      document.getElementById('pSyncOldComms').checked = true;
+      openModal('profileModal');
+    }
+
     function openAddComm() {
+      if (!isLoggedIn()) { openAuth(); return; }
       document.getElementById('commModalTitle').textContent = 'Thêm Link Comm';
       document.getElementById('commForm').reset();
       document.getElementById('commId').value = '';
+      document.getElementById('fCreator').value = state.session.user.creator_name || state.settings.owner1Name;
       openModal('commModal');
     }
 
     function openEditComm(id) {
+      if (!isLoggedIn()) { openAuth(); return; }
       const item = state.comms.find(c => c.id === id);
       if (!item) return;
       document.getElementById('commModalTitle').textContent = 'Chỉnh sửa Comm';
       document.getElementById('commId').value = item.id;
       document.getElementById('fTitle').value = item.title || '';
-      document.getElementById('fOwner').value = item.owner || 'owner1';
+      document.getElementById('fCreator').value = getCommCreatorName(item);
       document.getElementById('fStatus').value = item.status || 'done';
       document.getElementById('fUrl').value = item.url || '';
       document.getElementById('fImage').value = item.image || '';
@@ -1743,6 +2046,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
     }
 
     function openSettings() {
+      if (!isLoggedIn()) { openAuth(); return; }
       const s = state.settings;
       document.getElementById('sBanner').value = s.banner;
       document.getElementById('sTitle').value = s.title;
@@ -1761,11 +2065,15 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       openModal('syncModal');
     }
 
-    // Event bindings
+    // ===== Event Bindings =====
     document.getElementById('btnOpenAdd').addEventListener('click', openAddComm);
     document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
     document.getElementById('btnQuickEditIntro').addEventListener('click', openSettings);
     document.getElementById('btnOpenSync').addEventListener('click', openSync);
+    document.getElementById('btnOpenAuth').addEventListener('click', openAuth);
+    document.getElementById('btnOpenProfile').addEventListener('click', openProfile);
+    document.getElementById('tabLogin').addEventListener('click', () => setAuthTab('login'));
+    document.getElementById('tabSignup').addEventListener('click', () => setAuthTab('signup'));
 
     document.getElementById('btnTheme').addEventListener('click', () => {
       const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -1799,13 +2107,190 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       renderCards();
     });
 
+    // Live preview inside Profile modal
+    document.getElementById('pCreatorName').addEventListener('input', e => {
+      document.getElementById('profileNamePreview').textContent = e.target.value.trim() || 'Creator';
+    });
+    document.getElementById('pCreatorAvatar').addEventListener('input', e => {
+      const val = e.target.value.trim();
+      const name = document.getElementById('pCreatorName').value.trim() || 'Creator';
+      document.getElementById('profileAvatarPreview').src = val || avatarFor(name);
+    });
+
+    // Auth Form Submit
+    document.getElementById('authForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value.trim().toLowerCase();
+      const password = document.getElementById('authPassword').value;
+      const creatorName = document.getElementById('authCreatorName').value.trim() || email.split('@')[0];
+
+      if (isCloudReady()) {
+        try {
+          if (state.authTab === 'signup') {
+            const data = await sbAuthFetch('signup', 'POST', {
+              email,
+              password,
+              data: { creator_name: creatorName, avatar_url: avatarFor(creatorName) }
+            });
+            if (data.access_token && data.user) {
+              saveSession({
+                mode: 'supabase',
+                access_token: data.access_token,
+                user: {
+                  id: data.user.id,
+                  email: data.user.email,
+                  creator_name: data.user.user_metadata?.creator_name || creatorName,
+                  avatar_url: data.user.user_metadata?.avatar_url || avatarFor(creatorName)
+                }
+              });
+              closeModal('authModal');
+              renderAll();
+              toast(`Chào mừng Creator ${creatorName}!`);
+            } else {
+              closeModal('authModal');
+              toast('Đăng ký xong! Hãy kiểm tra email xác nhận rồi đăng nhập nha.');
+            }
+          } else {
+            const data = await sbAuthFetch('token?grant_type=password', 'POST', { email, password });
+            const meta = data.user?.user_metadata || {};
+            const cName = meta.creator_name || email.split('@')[0];
+            saveSession({
+              mode: 'supabase',
+              access_token: data.access_token,
+              user: {
+                id: data.user.id,
+                email: data.user.email,
+                creator_name: cName,
+                avatar_url: meta.avatar_url || avatarFor(cName)
+              }
+            });
+            closeModal('authModal');
+            renderAll();
+            toast(`Chào mừng trở lại, ${cName}!`);
+          }
+        } catch (err) {
+          toast(err.message || 'Đăng nhập thất bại!');
+        }
+      } else {
+        // Local fallback auth
+        const users = getLocalUsers();
+        if (state.authTab === 'signup') {
+          if (users.some(u => u.email === email)) {
+            toast('Email này đã đăng ký trên máy rồi!');
+            return;
+          }
+          const newUser = {
+            id: 'local-' + Date.now(),
+            email,
+            password,
+            creator_name: creatorName,
+            avatar_url: avatarFor(creatorName)
+          };
+          users.push(newUser);
+          saveLocalUsers(users);
+          saveSession({ mode: 'local', user: newUser });
+          closeModal('authModal');
+          renderAll();
+          toast(`Đã tạo tài khoản Creator ${creatorName}!`);
+        } else {
+          const found = users.find(u => u.email === email && u.password === password);
+          if (!found) {
+            toast('Sai email/mật khẩu hoặc chưa đăng ký trên máy này!');
+            return;
+          }
+          saveSession({ mode: 'local', user: found });
+          closeModal('authModal');
+          renderAll();
+          toast(`Xin chào, ${found.creator_name}!`);
+        }
+      }
+    });
+
+    // Profile Form Submit (Edit Creator Name)
+    document.getElementById('profileForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!isLoggedIn()) return;
+
+      const oldName = state.session.user.creator_name;
+      const newName = document.getElementById('pCreatorName').value.trim();
+      const newAvatar = document.getElementById('pCreatorAvatar').value.trim() || avatarFor(newName);
+      const syncOld = document.getElementById('pSyncOldComms').checked;
+
+      if (!newName) return;
+
+      // Update Supabase user metadata if in cloud mode
+      if (state.session.mode === 'supabase' && isCloudReady()) {
+        try {
+          await sbAuthFetch('user', 'PUT', {
+            data: { creator_name: newName, avatar_url: newAvatar }
+          }, true);
+        } catch (err) {
+          toast('Không cập nhật được lên Supabase: ' + err.message);
+        }
+      } else {
+        const users = getLocalUsers().map(u =>
+          u.email === state.session.user.email ? { ...u, creator_name: newName, avatar_url: newAvatar } : u
+        );
+        saveLocalUsers(users);
+      }
+
+      // Update session
+      state.session.user.creator_name = newName;
+      state.session.user.avatar_url = newAvatar;
+      saveSession(state.session);
+
+      // Update old comms owned by this creator if checked
+      if (syncOld && oldName && oldName !== newName) {
+        const uid = state.session.user.id;
+        const updatedItems = [];
+        state.comms = state.comms.map(item => {
+          const isMine = (item.user_id && item.user_id === uid) || getCommCreatorName(item) === oldName;
+          if (isMine) {
+            const next = { ...item, creator_name: newName };
+            updatedItems.push(next);
+            return next;
+          }
+          return item;
+        });
+        saveLocal();
+        if (isCloudReady()) {
+          for (const it of updatedItems) {
+            try { await upsertCloudItem(it); } catch {}
+          }
+        }
+      }
+
+      closeModal('profileModal');
+      renderAll();
+      toast(`Đã đổi tên Creator thành "${newName}"!`);
+    });
+
+    // Logout
+    document.getElementById('btnLogout').addEventListener('click', async () => {
+      if (state.session?.mode === 'supabase' && isCloudReady()) {
+        try { await sbAuthFetch('logout', 'POST', null, true); } catch {}
+      }
+      saveSession(null);
+      closeModal('profileModal');
+      renderAll();
+      toast('Đã đăng xuất!');
+    });
+
+    // Add / Edit Comm Submit
     document.getElementById('commForm').addEventListener('submit', async e => {
       e.preventDefault();
+      if (!isLoggedIn()) return;
+
       const existingId = document.getElementById('commId').value;
+      const existing = existingId ? state.comms.find(c => c.id === existingId) : null;
+      const creatorName = document.getElementById('fCreator').value.trim() || state.session.user.creator_name;
+
       const item = {
         id: existingId || 'comm-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
         title: document.getElementById('fTitle').value.trim(),
-        owner: document.getElementById('fOwner').value,
+        owner: creatorName,
+        creator_name: creatorName,
+        user_id: existing?.user_id || (state.session.mode === 'supabase' ? state.session.user.id : null),
         status: document.getElementById('fStatus').value,
         url: document.getElementById('fUrl').value.trim(),
         image: document.getElementById('fImage').value.trim(),
@@ -1813,9 +2298,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
         price: document.getElementById('fPrice').value.trim(),
         tags: document.getElementById('fTags').value.trim(),
         notes: document.getElementById('fNotes').value.trim(),
-        created_at: existingId
-          ? (state.comms.find(c => c.id === existingId)?.created_at || Date.now())
-          : Date.now()
+        created_at: existing?.created_at || Date.now()
       };
 
       if (existingId) {
@@ -1830,10 +2313,11 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       toast(existingId ? 'Đã cập nhật comm!' : 'Đã thêm comm mới!');
 
       if (isCloudReady()) {
-        try { await upsertCloudItem(item); } catch { toast('Lưu máy OK, nhưng đồng bộ Supabase bị lỗi'); }
+        try { await upsertCloudItem(item); } catch { toast('Lưu máy OK, nhưng đồng bộ Supabase bị lỗi (kiểm tra đăng nhập & SQL)'); }
       }
     });
 
+    // Page Settings Submit
     document.getElementById('settingsForm').addEventListener('submit', e => {
       e.preventDefault();
       state.settings = {
@@ -1852,6 +2336,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       toast('Đã lưu giao diện trang!');
     });
 
+    // Confirm Delete
     document.getElementById('btnConfirmDelete').addEventListener('click', async () => {
       const id = state.pendingDeleteId;
       if (!id) return;
@@ -1866,6 +2351,7 @@ create policy "Public access" on comm_links for all using (true) with check (tru
       state.pendingDeleteId = null;
     });
 
+    // Supabase Modal Actions
     document.getElementById('btnCopySql').addEventListener('click', async () => {
       await navigator.clipboard.writeText(document.getElementById('sqlSnippet').textContent);
       toast('Đã copy lệnh SQL!');
@@ -1888,8 +2374,9 @@ create policy "Public access" on comm_links for all using (true) with check (tru
     document.getElementById('btnDisconnectSb').addEventListener('click', () => {
       state.sb = { url: '', key: '' };
       localStorage.removeItem(STORAGE_KEY_SB);
+      if (state.session?.mode === 'supabase') saveSession(null);
       closeModal('syncModal');
-      renderPageInfo();
+      renderAll();
       toast('Đã ngắt kết nối Supabase');
     });
 
