@@ -1,12 +1,11 @@
-# Góc Lưu Trữ Comm (GitHub Pages)
+# Góc Lưu Trữ Comm (Dark Mode + Nền Chuyển Động)
 
-## Cách đưa web lên GitHub Pages (3 phút)
-1. Giải nén file `.zip` này ra để lấy file `index.html`.
-2. Vào GitHub -> tạo một Repository mới (chọn chế độ **Public**).
-3. Bấm **Add file** -> **Upload files** -> kéo thả file `index.html` vào rồi bấm **Commit changes**.
-4. Vào tab **Settings** -> mục **Pages** (cột bên trái) -> ở phần **Branch**, chọn `main` và thư mục `/ (root)` -> bấm **Save**.
-5. Đợi 1–2 phút, GitHub sẽ hiện link dạng `https://ten-cua-ban.github.io/ten-repo/`.
+## Nâng cấp ở bản v3
+- Mặc định nền đen sang trọng (vẫn có nút chuyển sang nền sáng ở góc trên phải).
+- Nền chuyển động 2 lớp: quầng sáng aurora trôi chậm + bụi sao lấp lánh nhẹ bằng Canvas, tối ưu mượt trên cả laptop và điện thoại.
+- Thẻ kính mờ (glassmorphism), tiêu đề ánh kim chuyển động nhẹ, ảnh banner zoom chậm.
 
-## Cách đồng bộ dữ liệu giữa 2 người
-- **Mặc định (không cần cài thêm gì):** Dữ liệu lưu trên trình duyệt của từng máy. Có thể bấm nút **Sync -> Xuất/Nhập file JSON** để gửi qua lại.
-- **Muốn 2 người cùng thêm/sửa thấy liền:** Tạo 1 project miễn phí trên [Supabase](https://supabase.com), chạy đoạn SQL có sẵn trong nút **☁ Sync** trên web, sau đó dán `Project URL` và `Anon Key` vào là xong.
+## Cập nhật lên GitHub & Vercel
+1. Giải nén file `.zip` để lấy `index.html`.
+2. Upload đè `index.html` lên repo GitHub của bạn.
+3. Chờ Vercel tự cập nhật sau khoảng 10–30 giây.
